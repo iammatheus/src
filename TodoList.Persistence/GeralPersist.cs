@@ -6,7 +6,7 @@ namespace TodoList.Persistence
 {
     public class GeralPersist : IGeralPersist
     {
-        public readonly TodoListContext _context;
+        private readonly TodoListContext _context;
         public GeralPersist(TodoListContext context)
         {
             _context = context;

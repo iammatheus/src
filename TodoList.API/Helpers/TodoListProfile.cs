@@ -9,6 +9,8 @@ namespace TodoList.API.Helpers
         public TodoListProfile()
         {
             CreateMap<Tag, TagDto>().ReverseMap();
+            CreateMap<Job, JobDto>().ReverseMap();
+
         }
     }
 }

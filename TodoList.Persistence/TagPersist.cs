@@ -9,7 +9,7 @@ namespace TodoList.Persistence
 {
     public class TagPersist : ITagPersist
     {
-        public readonly TodoListContext _context;
+        private readonly TodoListContext _context;
         public TagPersist(TodoListContext context)
         {
             _context = context;
