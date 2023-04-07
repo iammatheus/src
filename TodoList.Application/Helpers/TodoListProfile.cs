@@ -1,6 +1,7 @@
-using AutoMapper;
+﻿using AutoMapper;
 using TodoList.Domain;
 using TodoList.Application.Dtos;
+using TodoList.Domain.Identity;
 
 namespace TodoList.API.Helpers
 {
@@ -11,6 +12,9 @@ namespace TodoList.API.Helpers
             CreateMap<Tag, TagDto>().ReverseMap();
             CreateMap<Job, JobDto>().ReverseMap();
 
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserLoginDto>().ReverseMap();
+            CreateMap<User, UserUpdateDto>().ReverseMap();
         }
     }
 }
