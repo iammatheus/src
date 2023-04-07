@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TodoList.Application;
 using TodoList.Application.Contratos;
+using TodoList.Domain.Identity;
 using TodoList.Persistence;
 using TodoList.Persistence.Contextos;
 using TodoList.Persistence.Contratos;
