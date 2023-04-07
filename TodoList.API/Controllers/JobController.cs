@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TodoList.Application.Contratos;
 using TodoList.Application.Dtos;
 
 namespace TodoList.API.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class JobController : ControllerBase
     {
         private readonly IJobService _jobService;
@@ -25,7 +26,6 @@ namespace TodoList.API.Controllers
             _hostEnvironment = hostEnvironment;
 
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -43,7 +43,6 @@ namespace TodoList.API.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Post(JobDto model)
         {
@@ -58,7 +57,5 @@ namespace TodoList.API.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar adicionar task. Erro: {ex.Message}");
             }
         }
-
-
     }
 }
