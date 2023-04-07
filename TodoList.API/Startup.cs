@@ -65,10 +65,13 @@ namespace TodoList.API
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IJobService, JobService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IGeralPersist, GeralPersist>();
             services.AddScoped<ITagPersist, TagPersist>();
             services.AddScoped<IJobPersist, JobPersist>();
+            services.AddScoped<IUserPersist, UserPersist>();
 
             services.AddControllers();
 

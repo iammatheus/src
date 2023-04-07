@@ -107,7 +107,6 @@ namespace TodoList.API.Controllers
         [HttpPut("UpdateUser")]
         public async Task<IActionResult> UpdateUser(UserUpdateDto updateUser)
         {
-
             try
             {
                 if(updateUser.UserName != User.GetUserName()) return Unauthorized("Usuário inválido!");
