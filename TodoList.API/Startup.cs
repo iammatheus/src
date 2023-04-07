@@ -71,10 +71,6 @@ namespace TodoList.API
             services.AddScoped<IJobPersist, JobPersist>();
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoList.API", Version = "v1" });
-            });
 
             services.AddCors();
             services.AddSwaggerGen(options =>

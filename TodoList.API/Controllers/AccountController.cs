@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using TodoList.API.Extensions;
+using TodoList.Application.Contratos;
+using TodoList.Application.Dtos;
 
 namespace TodoList.API.Controllers
 {
@@ -11,8 +14,8 @@ namespace TodoList.API.Controllers
     [Authorize]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountService _accountService { get; set; }
-        private readonly ITokenService _tokenService { get; set; }
+        private readonly IAccountService _accountService;
+        private readonly ITokenService _tokenService;
 
         public AccountController(IAccountService accountService, ITokenService tokenService )
         {
@@ -52,7 +55,7 @@ namespace TodoList.API.Controllers
                 if (user != null)
                     return Ok(new
                     {
-                        userName = User.Name,
+                        userName = user.UserName,
                         fullName = user.FullName,
                         token = _tokenService.CreateToken(user).Result
 
@@ -116,7 +119,7 @@ namespace TodoList.API.Controllers
 
                 return Ok(new
                 {
-                    userName = User.Name,
+                    userName = user.UserName,
                     fullName = user.FullName,
                     token = _tokenService.CreateToken(user).Result
                 });
