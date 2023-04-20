@@ -17,22 +17,24 @@ namespace TodoList.Persistence
             _context = context;
         }
 
-        public async Task<Job[]> GetAllJobAsync()
+        public async Task<Job[]> GetAllJobAsync(int userId)
         {
             IQueryable<Job> query = _context.Jobs;
             query = query.AsNoTracking()
+                .Where(j => j.UserId == userId)
                .OrderBy(e => e.Id);
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Job> GetJobByIdAsync(int jobId)
+        public async Task<Job> GetJobByIdAsync(int userId, int jobId)
         {
             IQueryable<Job> query = _context.Jobs;
 
-            query = query.AsNoTracking()
-                .OrderBy(e => e.Id)
-                .Where(e => e.Id == jobId);
+            query = query
+                .AsNoTracking()
+                .OrderBy(j => j.Id)
+                .Where(j => j.Id == jobId && j.UserId == userId);
 
             return await query.FirstOrDefaultAsync();
         }

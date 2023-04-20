@@ -36,10 +36,12 @@ namespace TodoList.Persistence.Contextos
             });
 
             modelBuilder.Entity<Tag>()
-                .ToTable("Tag");
+                .HasMany(j => j.Jobs)
+                .WithOne(t => t.Tag)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Job>()
-                .ToTable("Job");
+                .HasOne(t => t.Tag);
         }
     }
 }
