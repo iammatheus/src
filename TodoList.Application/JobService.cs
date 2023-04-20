@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TodoList.Application.Contratos;
 using TodoList.Application.Dtos;
+using TodoList.Domain;
 using TodoList.Persistence.Contratos;
 
 namespace TodoList.Application
@@ -30,16 +31,17 @@ namespace TodoList.Application
 
         }
 
-        public async Task<JobDto> AddJob(JobDto model)
+        public async Task<JobDto> AddJob(int userId, JobDto model)
         {
             try
             {
-                var task = _mapper.Map<Domain.Job>(model);
+                var task = _mapper.Map<Job>(model);
+                task.UserId = userId;
                 _geralPersist.Add(task);
 
                 if (await _geralPersist.SaveChangesAsync())
                 {
-                    var taskRetorno = await _taskPersist.GetJobByIdAsync(task.Id);
+                    var taskRetorno = await _taskPersist.GetJobByIdAsync(userId, task.Id);
                     return _mapper.Map<JobDto>(taskRetorno);
                 }
                 return null;
@@ -51,14 +53,14 @@ namespace TodoList.Application
             }
         }
 
-        public async Task<bool> DeleteJob(int taskId)
+        public async Task<bool> DeleteJob(int userId, int taskId)
         {
             try
             {
-                var task = await _taskPersist.GetJobByIdAsync(taskId);
+                var task = await _taskPersist.GetJobByIdAsync(userId, taskId);
                 if (task == null) throw new Exception("Erro ao excluir tag. Tag não encontrado!");
 
-                _geralPersist.Delete<Domain.Job>(task);
+                _geralPersist.Delete(task);
 
                 return await _geralPersist.SaveChangesAsync();
             }
@@ -69,11 +71,11 @@ namespace TodoList.Application
             }
         }
 
-        public async Task<JobDto[]> GetAllJobAsync()
+        public async Task<JobDto[]> GetAllJobAsync(int userId)
         {
             try
             {
-                var tasks = await _taskPersist.GetAllJobAsync();
+                var tasks = await _taskPersist.GetAllJobAsync(userId);
                 if (tasks == null) return null;
 
                 var resultado = _mapper.Map<JobDto[]>(tasks);
@@ -86,11 +88,11 @@ namespace TodoList.Application
             }
         }
 
-        public async Task<JobDto> GetJobByIdAsync(int taskId)
+        public async Task<JobDto> GetJobByIdAsync(int userId, int taskId)
         {
             try
             {
-                var task = await _taskPersist.GetJobByIdAsync(taskId);
+                var task = await _taskPersist.GetJobByIdAsync(userId, taskId);
                 if (task == null) return null;
 
                 var resultado = _mapper.Map<JobDto>(task);
@@ -103,21 +105,22 @@ namespace TodoList.Application
             }
         }
 
-        public  async Task<JobDto> UpdateJob(int TaskId, JobDto model)
+        public  async Task<JobDto> UpdateJob(int userId, int taskId, JobDto model)
         {
             try
             {
-                var task = await _taskPersist.GetJobByIdAsync(TaskId);
+                var task = await _taskPersist.GetJobByIdAsync(userId, taskId);
                 if (task == null) return null;
 
                 model.Id = task.Id;
+                model.UserId = userId;
 
                 _mapper.Map(model, task);
                 _geralPersist.Update(task);
 
                 if (await _geralPersist.SaveChangesAsync())
                 {
-                    var taskRetorno = await _taskPersist.GetJobByIdAsync(task.Id);
+                    var taskRetorno = await _taskPersist.GetJobByIdAsync(userId, task.Id);
                     return _mapper.Map<JobDto>(taskRetorno);
                 }
                 return null;

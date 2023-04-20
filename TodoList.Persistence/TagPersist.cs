@@ -13,26 +13,28 @@ namespace TodoList.Persistence
         public TagPersist(TodoListContext context)
         {
             _context = context;
-            // _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking; Aplica AsNoTracking() para todas as funções.
         }
 
-        public async Task<Tag[]> GetAllTagsAsync()
+        public async Task<Tag[]> GetAllTagsAsync(int userId)
         {
             IQueryable<Tag> query = _context.Tags;
 
-            query = query.AsNoTracking()
+            query = query
+                .AsNoTracking()
+                .Where(t => t.UserId == userId)
                 .OrderBy(e => e.Id);
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Tag> GetTagByIdAsync(int tagId)
+        public async Task<Tag> GetTagByIdAsync(int userId, int tagId)
         {
             IQueryable<Tag> query = _context.Tags;
 
-            query = query.AsNoTracking()
-                .OrderBy(e => e.Id)
-                .Where(e => e.Id == tagId);
+            query = query
+                .AsNoTracking()
+                .OrderBy(j => j.Id)
+                .Where(j => j.Id == tagId && j.UserId == userId);
 
             return await query.FirstOrDefaultAsync();
         }

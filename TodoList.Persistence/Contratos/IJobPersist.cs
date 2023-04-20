@@ -5,9 +5,7 @@ namespace TodoList.Persistence.Contratos
 {
     public interface IJobPersist
     {
-
-        Task<Job[]> GetAllJobAsync();
-        Task<Job> GetJobByIdAsync(int jobId);
-        
+        Task<Job[]> GetAllJobAsync(int userId);
+        Task<Job> GetJobByIdAsync(int userId, int jobId);
     }
 }

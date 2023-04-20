@@ -235,12 +235,22 @@ namespace TodoList.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Job");
+                    b.HasIndex("TagId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("TodoList.Domain.Tag", b =>
@@ -253,9 +263,14 @@ namespace TodoList.Persistence.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Tag");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -313,6 +328,36 @@ namespace TodoList.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TodoList.Domain.Job", b =>
+                {
+                    b.HasOne("TodoList.Domain.Tag", "Tag")
+                        .WithMany("Jobs")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("TodoList.Domain.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TodoList.Domain.Tag", b =>
+                {
+                    b.HasOne("TodoList.Domain.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TodoList.Domain.Identity.Role", b =>
                 {
                     b.Navigation("UserRoles");
@@ -321,6 +366,11 @@ namespace TodoList.Persistence.Migrations
             modelBuilder.Entity("TodoList.Domain.Identity.User", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("TodoList.Domain.Tag", b =>
+                {
+                    b.Navigation("Jobs");
                 });
 #pragma warning restore 612, 618
         }

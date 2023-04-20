@@ -25,16 +25,17 @@ namespace TodoList.Application
             _mapper = mapper;
         }
 
-        public async Task<TagDto> AddTag(TagDto model)
+        public async Task<TagDto> AddTag(int userId, TagDto model)
         {
             try
             {
                 var tag = _mapper.Map<Tag>(model);
+                tag.UserId = userId;
                 _geralPersist.Add(tag);
 
                 if (await _geralPersist.SaveChangesAsync())
                 {
-                    var tagRetorno = await _tagPersist.GetTagByIdAsync(tag.Id);
+                    var tagRetorno = await _tagPersist.GetTagByIdAsync(userId, tag.Id);
                     return _mapper.Map<TagDto>(tagRetorno);
                 }
                 return null;
@@ -44,21 +45,22 @@ namespace TodoList.Application
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<TagDto> UpdateTag(int tagId, TagDto model)
+        public async Task<TagDto> UpdateTag(int userId, int tagId, TagDto model)
         {
             try
             {
-                var tag = await _tagPersist.GetTagByIdAsync(tagId);
+                var tag = await _tagPersist.GetTagByIdAsync(userId, tagId);
                 if (tag == null) return null;
 
                 model.Id = tag.Id;
+                model.UserId = userId;
 
                 _mapper.Map(model, tag);
                 _geralPersist.Update(tag);
 
                 if (await _geralPersist.SaveChangesAsync())
                 {
-                    var tagRetorno = await _tagPersist.GetTagByIdAsync(tag.Id);
+                    var tagRetorno = await _tagPersist.GetTagByIdAsync(userId, tag.Id);
                     return _mapper.Map<TagDto>(tagRetorno);
                 }
                 return null;
@@ -69,14 +71,14 @@ namespace TodoList.Application
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<bool> DeleteTag(int tagId)
+        public async Task<bool> DeleteTag(int userId, int tagId)
         {
             try
             {
-                var tag = await _tagPersist.GetTagByIdAsync(tagId);
+                var tag = await _tagPersist.GetTagByIdAsync(userId, tagId);
                 if (tag == null) throw new Exception("Erro ao excluir tag. Tag não encontrado!");
 
-                _geralPersist.Delete<Tag>(tag);
+                _geralPersist.Delete(tag);
 
                 return await _geralPersist.SaveChangesAsync();
             }
@@ -87,11 +89,11 @@ namespace TodoList.Application
             }
         }
 
-        public async Task<TagDto[]> GetAllTagsAsync()
+        public async Task<TagDto[]> GetAllTagsAsync(int userId)
         {
             try
             {
-                var tags = await _tagPersist.GetAllTagsAsync();
+                var tags = await _tagPersist.GetAllTagsAsync(userId);
                 if (tags == null) return null;
 
                 var resultado = _mapper.Map<TagDto[]>(tags);
@@ -104,11 +106,11 @@ namespace TodoList.Application
             }
         }
 
-        public async Task<TagDto> GetTagByIdAsync(int tagId)
+        public async Task<TagDto> GetTagByIdAsync(int userId, int tagId)
         {
             try
             {
-                var tag = await _tagPersist.GetTagByIdAsync(tagId);
+                var tag = await _tagPersist.GetTagByIdAsync(userId, tagId);
                 if (tag == null) return null;
 
                 var resultado = _mapper.Map<TagDto>(tag);

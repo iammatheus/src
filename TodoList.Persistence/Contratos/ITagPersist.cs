@@ -5,7 +5,7 @@ namespace TodoList.Persistence.Contratos
 {
     public interface ITagPersist
     {
-        Task<Tag[]> GetAllTagsAsync();
-        Task<Tag> GetTagByIdAsync(int tagId);
+        Task<Tag[]> GetAllTagsAsync(int userId);
+        Task<Tag> GetTagByIdAsync(int userId, int tagId);
     }
 }
